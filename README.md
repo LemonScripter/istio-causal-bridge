@@ -1,28 +1,27 @@
 # DCC Causal Mesh for Istio / Envoy
 
-## Overview
-The **DCC Causal Mesh** is a professional WebAssembly (Wasm) extension for Envoy Proxy (Istio). It synchronizes **Service Mesh authorization** with **Kernel-level causality**, ensuring that application outbound traffic is strictly caused by verified inbound requests.
+[![Status](https://img.shields.io/badge/Status-Hardened--Prototype-blue)](ROADMAP.md)
+[![Project](https://img.shields.io/badge/BioOS-Causal--Security-green)](https://metaspace.bio)
 
-## The Problem: The Intra-Pod Gap
-Istio provides robust L7 network security (mTLS, RBAC) between services. However, it cannot verify the *local execution* within the pod. If a rogue process or thread (exploit) inside an authorized pod initiates an outbound connection, Envoy allows it because the *Service Identity* is valid. This is an "orphaned" outbound request.
+## Hardened Architecture: Mesh-to-Kernel Synchronization
 
-## The Solution: Mesh-to-Kernel Bridge
-This bridge integrates **Digital Causal Closure (DCC)** into the mesh:
-1. **Inbound Synchronization:** When a valid external request enters the pod through Envoy, the DCC Wasm Filter issues a temporary **Causal Token** to the local kernel.
-2. **Outbound Enforcement:** The kernel eBPF module (DCC Driver) intercepts outbound syscalls (e.g., `connect`). It only allows the connection if it finds a valid token issued by the local Envoy proxy.
-3. **Closure:** This ensures that every outbound network call is causally linked to an authorized inbound network event.
+The **DCC Causal Mesh** bridge closes the intra-pod gap in Service Mesh security. It ensures that application network egress is physically bound to authorized inbound requests through **Digital Causal Closure (DCC)**.
 
-## Scientific Background
-This integration is based on the following formal research:
-- [The Causal Operating System: Digital Causal Closure for Autonomous Systems](https://doi.org/10.5281/zenodo.20384700)
-- [BioOS Causal Constitution (PDF)](https://bioos.metaspace.bio/bioos_causal_constitution_en.pdf)
+### Hardened Implementation
 
-## Components
-- **`causal_filter.cc`**: Envoy Proxy-Wasm filter (C++) for inbound causal synchronization.
-- **`verify_mesh.py`**: Logic verification suite ensuring 100% causal chain integrity between mesh and kernel.
+- **Wasm Causal Filter:** A custom Envoy Proxy-Wasm filter intercepts inbound headers and synchronizes the causal context with the local kernel eBPF map.
+- **Fail-Closed Mesh Integrity:** Outbound connections are blocked by the kernel eBPF module unless a valid token was issued by the local Envoy sidecar.
+- **Cross-Layer Authorization:** Bridges L7 network identity (Istio RBAC) with L4/L3 kernel causality.
 
-## Upstreaming Proposal
-We propose the integration of Causal Mesh filters as a standard security enhancement for Istio deployments in zero-trust environments, closing the gap between network identity and local execution causality.
+### Security Guarantees
+
+1. **Intra-Pod Sovereignty:** Prevents compromised application threads from initiating unauthorized outbound connections.
+2. **Causal Chain Integrity:** Ensures every outbound API call has a verifiable inbound causal trigger.
+3. **Hardware-Anchored Mesh:** Anchors high-level Service Mesh policies in the physical reality of kernel-level execution.
+
+### Scientific Foundation
+
+This implementation is based on the [BioOS Causal Constitution (DOI: 10.5281/zenodo.20384700)](https://doi.org/10.5281/zenodo.20384700).
 
 ---
-*Created by MetaSpace BioOS | [metaspace.bio](https://metaspace.bio) | [admin@metaspace.bio](mailto:admin@metaspace.bio)*
+*Verified by MetaSpace BioOS Team | [metaspace.bio](https://metaspace.bio)*
