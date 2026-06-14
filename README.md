@@ -19,9 +19,12 @@ The **DCC Causal Mesh** bridge closes the intra-pod gap in Service Mesh security
 2. **Causal Chain Integrity:** Ensures every outbound API call has a verifiable inbound causal trigger.
 3. **Hardware-Anchored Mesh:** Anchors high-level Service Mesh policies in the physical reality of kernel-level execution.
 
-### Scientific Foundation
+### Scientific & Technical Foundation
 
-This implementation is based on the [BioOS Causal Constitution (DOI: 10.5281/zenodo.20384700)](https://doi.org/10.5281/zenodo.20384700).
+This implementation is based on the following formal specifications and research:
+
+- **Research Paper:** [The Causal Operating System: Digital Causal Closure for Autonomous Systems](https://doi.org/10.5281/zenodo.20384700)
+- **Formal Specification:** [BioOS Causal Constitution (PDF)](https://bioos.metaspace.bio/bioos_causal_constitution_en.pdf)
 
 ---
 *Verified by MetaSpace BioOS Team | [metaspace.bio](https://metaspace.bio)*
